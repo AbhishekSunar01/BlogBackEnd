@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BisleriumServer", "BisleriumServer.csproj", "{045AB1C2-5BEF-43A5-B4FA-7DC2F6E02093}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{045AB1C2-5BEF-43A5-B4FA-7DC2F6E02093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{045AB1C2-5BEF-43A5-B4FA-7DC2F6E02093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{045AB1C2-5BEF-43A5-B4FA-7DC2F6E02093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{045AB1C2-5BEF-43A5-B4FA-7DC2F6E02093}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BC73A3B3-DE92-4AC9-BA0C-6C03A57996D8}
+	EndGlobalSection
+EndGlobal
