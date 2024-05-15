@@ -297,34 +297,8 @@ namespace BisleriumServer.Controllers
             return Ok(blog);
         }
 
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> UpdateBlog(int id, [FromBody] BlogModel model)
-        // {
-        //     if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(ModelState);
-        //     }
-
-        //     var blog = await _context.Blogs.FindAsync(id);
-        //     if (blog == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     // Update only the title and description
-        //     blog.Title = model.Title;
-        //     blog.Description = model.Description;
-
-        //     // As there's no image handling, we simply save the changes
-        //     _context.Blogs.Update(blog);
-        //     await _context.SaveChangesAsync();
-
-        //     return NoContent();
-        // }
-
-
-[HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBlog(int id, [FromBody] BlogUpdateDTO model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBlog(int id, [FromForm] BlogModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -334,24 +308,28 @@ namespace BisleriumServer.Controllers
             var blog = await _context.Blogs.FindAsync(id);
             if (blog == null)
             {
-                return NotFound("Blog not found.");
+                return NotFound();
             }
 
-            if (!string.IsNullOrWhiteSpace(model.Title))
+            blog.Title = model.Title;
+            blog.Description = model.Description;
+
+            if (model.Image != null)
             {
-                blog.Title = model.Title;
+                string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+                string filePath = Path.Combine(directoryPath, model.Image.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+                blog.ImagePath = filePath;
             }
 
-            if (!string.IsNullOrWhiteSpace(model.Description))
-            {
-                blog.Description = model.Description;
-            }
-
+            _context.Blogs.Update(blog);
             await _context.SaveChangesAsync();
 
-            return NoContent();  // Indicates the request was successful and that the resource was updated
+            return NoContent();
         }
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBlog(int id)
@@ -367,39 +345,6 @@ namespace BisleriumServer.Controllers
 
             return NoContent();
         }
-
-        // GET: api/blog/my-blogs
-        [HttpGet("my-blogs")]
-        public async Task<ActionResult<IEnumerable<BlogDTO>>> GetMyBlogs()
-        {
-            int userId = GetCurrentUserId();
-            if (userId == 0)
-            {
-                return Unauthorized("User is not authenticated.");
-            }
-
-            var blogs = await _context.Blogs
-                .Where(b => b.UserId == userId)
-                .Select(b => new BlogDTO
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    Description = b.Description,
-                    CreatedAt = b.CreatedAt,
-                    LikesCount = b.Likes.Count,
-                    DislikesCount = b.Dislikes.Count,
-                    CommentsCount = b.Comments.Count
-                })
-                .ToListAsync();
-
-            if (!blogs.Any())
-            {
-                return NotFound("No blogs found.");
-            }
-
-            return Ok(blogs);
-        }
-
 
         private int GetCurrentUserId()
         {

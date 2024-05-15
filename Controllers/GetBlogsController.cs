@@ -151,7 +151,51 @@ namespace BisleriumServer.Controllers
             return Ok(blogs.Select(b => MapBlogToDto(b)));
         }
 
-        private dynamic MapBlogToDto(Blog blog)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBlogById(int id)
+        {
+            var blog = await _context.Blogs
+                .Where(b => b.Id == id)
+                .Include(b => b.User)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.User)
+                .Include(b => b.Likes)
+                .Include(b => b.Dislikes)
+                .Select(b => MapBlogToDto(b))
+                .FirstOrDefaultAsync();
+
+            if (blog == null)
+            {
+                return NotFound("Blog not found.");
+            }
+
+            return Ok(blog);
+        }
+
+        // private dynamic MapBlogToDto(Blog blog)
+        // {
+        //     return new
+        //     {
+        //         Id = blog.Id,
+        //         Title = blog.Title,
+        //         Description = blog.Description,
+        //         CreatedAt = blog.CreatedAt,
+        //         Username = blog.User?.Username,
+        //         LikesCount = blog.Likes?.Count() ?? 0,
+        //         DislikesCount = blog.Dislikes?.Count() ?? 0,
+        //         CommentsCount = blog.Comments?.Count() ?? 0,
+        //         Comments = blog.Comments?.Select(c => new {
+        //             c.Id,
+        //             c.Text,
+        //             UserName = c.User?.Username,
+        //             LikesCount = c.Likes?.Count() ?? 0,
+        //             DislikesCount = c.Dislikes?.Count() ?? 0
+        //         }).ToList(),
+        //         ImageUrl = blog.ImagePath
+        //     };
+        // }
+
+         private static dynamic MapBlogToDto(Blog blog)
         {
             return new
             {
