@@ -297,8 +297,34 @@ namespace BisleriumServer.Controllers
             return Ok(blog);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBlog(int id, [FromForm] BlogModel model)
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> UpdateBlog(int id, [FromBody] BlogModel model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+
+        //     var blog = await _context.Blogs.FindAsync(id);
+        //     if (blog == null)
+        //     {
+        //         return NotFound();
+        //     }
+
+        //     // Update only the title and description
+        //     blog.Title = model.Title;
+        //     blog.Description = model.Description;
+
+        //     // As there's no image handling, we simply save the changes
+        //     _context.Blogs.Update(blog);
+        //     await _context.SaveChangesAsync();
+
+        //     return NoContent();
+        // }
+
+
+[HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBlog(int id, [FromBody] BlogUpdateDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -308,28 +334,24 @@ namespace BisleriumServer.Controllers
             var blog = await _context.Blogs.FindAsync(id);
             if (blog == null)
             {
-                return NotFound();
+                return NotFound("Blog not found.");
             }
 
-            blog.Title = model.Title;
-            blog.Description = model.Description;
-
-            if (model.Image != null)
+            if (!string.IsNullOrWhiteSpace(model.Title))
             {
-                string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
-                string filePath = Path.Combine(directoryPath, model.Image.FileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await model.Image.CopyToAsync(stream);
-                }
-                blog.ImagePath = filePath;
+                blog.Title = model.Title;
             }
 
-            _context.Blogs.Update(blog);
+            if (!string.IsNullOrWhiteSpace(model.Description))
+            {
+                blog.Description = model.Description;
+            }
+
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return NoContent();  // Indicates the request was successful and that the resource was updated
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBlog(int id)
