@@ -135,3 +135,4 @@ D:\asp.net\Project\BisleriumServer\obj\Debug\net8.0\BisleriumServer.pdb
 D:\asp.net\Project\BisleriumServer\obj\Debug\net8.0\BisleriumServer.genruntimeconfig.cache
 D:\asp.net\Project\BisleriumServer\obj\Debug\net8.0\ref\BisleriumServer.dll
 D:\asp.net\Project\BisleriumServer\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\asp.net\Project\BisleriumServer\obj\Debug\net8.0\BisleriumServer.sourcelink.json
