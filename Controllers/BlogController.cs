@@ -346,6 +346,37 @@ namespace BisleriumServer.Controllers
             return NoContent();
         }
 
+          // GET: api/blog/my-blogs
+        [HttpGet("my-blogs")]
+        public async Task<ActionResult<IEnumerable<BlogDTO>>> GetMyBlogs()
+        {
+            int userId = GetCurrentUserId();
+            if (userId == 0)
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var blogs = await _context.Blogs
+                .Where(b => b.UserId == userId)
+                .Select(b => new BlogDTO
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Description = b.Description,
+                    LikesCount = b.Likes.Count,
+                    DislikesCount = b.Dislikes.Count,
+                    ImagePath = b.ImagePath
+                })
+                .ToListAsync();
+
+            if (!blogs.Any())
+            {
+                return NotFound("No blogs found.");
+            }
+
+            return Ok(blogs);
+        }
+
         private int GetCurrentUserId()
         {
             if (User.Identity.IsAuthenticated)

@@ -9,6 +9,8 @@
     public string Username { get; set; } // From associated User
     public int LikesCount { get; set; }
     public int DislikesCount { get; set; }
+
+    public string ImagePath { get; set; }
     public List<CommentDTO> Comments { get; set; }
 }
 
