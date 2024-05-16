@@ -365,6 +365,7 @@ namespace BisleriumServer.Controllers
                     Description = b.Description,
                     LikesCount = b.Likes.Count,
                     DislikesCount = b.Dislikes.Count,
+                    ImagePath = b.ImagePath,
                 })
                 .ToListAsync();
 

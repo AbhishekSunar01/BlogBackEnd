@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BisleriumServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2e86a9e7235545e1312b2005d4b15ed80240d1a5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+317da02b58011f3cd73f90737b5031d5e451a0ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("BisleriumServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BisleriumServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
