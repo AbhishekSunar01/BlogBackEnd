@@ -297,39 +297,39 @@ namespace BisleriumServer.Controllers
             return Ok(blog);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBlog(int id, [FromForm] BlogModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> UpdateBlog(int id, [FromForm] BlogModel model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
 
-            var blog = await _context.Blogs.FindAsync(id);
-            if (blog == null)
-            {
-                return NotFound();
-            }
+        //     var blog = await _context.Blogs.FindAsync(id);
+        //     if (blog == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            blog.Title = model.Title;
-            blog.Description = model.Description;
+        //     blog.Title = model.Title;
+        //     blog.Description = model.Description;
 
-            if (model.Image != null)
-            {
-                string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
-                string filePath = Path.Combine(directoryPath, model.Image.FileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await model.Image.CopyToAsync(stream);
-                }
-                blog.ImagePath = filePath;
-            }
+        //     if (model.Image != null)
+        //     {
+        //         string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+        //         string filePath = Path.Combine(directoryPath, model.Image.FileName);
+        //         using (var stream = new FileStream(filePath, FileMode.Create))
+        //         {
+        //             await model.Image.CopyToAsync(stream);
+        //         }
+        //         blog.ImagePath = filePath;
+        //     }
 
-            _context.Blogs.Update(blog);
-            await _context.SaveChangesAsync();
+        //     _context.Blogs.Update(blog);
+        //     await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBlog(int id)
@@ -365,7 +365,6 @@ namespace BisleriumServer.Controllers
                     Description = b.Description,
                     LikesCount = b.Likes.Count,
                     DislikesCount = b.Dislikes.Count,
-                    ImagePath = b.ImagePath
                 })
                 .ToListAsync();
 
@@ -375,6 +374,35 @@ namespace BisleriumServer.Controllers
             }
 
             return Ok(blogs);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBlog(int id, [FromBody] BlogUpdateDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var blog = await _context.Blogs.FindAsync(id);
+            if (blog == null)
+            {
+                return NotFound("Blog not found.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Title))
+            {
+                blog.Title = model.Title;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Description))
+            {
+                blog.Description = model.Description;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();  // Indicates the request was successful and that the resource was updated
         }
 
         private int GetCurrentUserId()
